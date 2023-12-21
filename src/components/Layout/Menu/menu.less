@@ -1,0 +1,85 @@
+.menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+	.logo-box {
+		display: flex;
+		align-items: center;
+		// justify-content: center;
+		margin-left: 20px;
+		height: 55px;
+		.logo-img {
+			width: 45px;
+			margin: 0;
+		}
+		.logo-text {
+			margin: 0 0 0 10px;
+			font-size: 24px;
+			font-weight: bold;
+			color: #74B9FF;
+			white-space: nowrap;
+		}
+	}
+	.ant-menu-root {
+		// flex: 1;
+		height: 100%;
+		overflow-x: hidden;
+		overflow-y: auto;
+		margin-top: 30px;
+	}
+
+	/* 去除菜单 Loading 遮罩层 */
+	.ant-spin-nested-loading,
+	.ant-spin-container {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		.ant-spin {
+			max-height: 100% !important;
+		}
+		.ant-spin-container::after {
+			background: transparent !important;
+		}
+		.ant-spin-blur {
+			overflow: auto !important;
+			clear: none !important;
+			opacity: 1 !important;
+		}
+	}
+
+	.ant-menu-item:hover::after {
+        border-bottom: 0px solid transparent;
+    }
+
+    .ant-menu-item {
+        padding: 4px 20px;
+		margin-top: 10px;
+    }
+
+	// .ant-menu-item-selected {
+	// 	background-color: rgb(116, 185, 255) !important;
+	// 	border-top-right-radius: 20px;
+	// 	border-bottom-right-radius: 20px;
+	//   }
+
+	.ant-menu-item span {
+		font-size: 15px;
+        color: #8395A7;
+    }
+
+	.ant-menu-item-selected span {
+		color: #1677FF;
+    }
+
+	.ant-menu-item-selected:after {
+        border-right-width: 0px;        
+        border-right-color: transparent;
+    }
+
+    .ant-menu-title-content {
+        margin-left: 10px;
+        font-weight: 500;
+        font-size: 15px;
+    }
+}

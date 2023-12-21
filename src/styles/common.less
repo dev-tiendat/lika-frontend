@@ -1,0 +1,155 @@
+/* 常用 flex */
+.flx-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.flx-justify-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.flx-align-center {
+	display: flex;
+	align-items: center;
+}
+
+.ant-btn-primary {
+	background-color: rgb(116, 185, 255) !important;
+}
+
+// .ant-select-selection-search-input {
+// 	font-size: 16 !important;
+// }
+
+/* 清除浮动 */
+.clearfix::after {
+	display: block;
+	height: 0;
+	overflow: hidden;
+	clear: both;
+	content: "";
+}
+
+/* 文字单行省略号 */
+.sle {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* 文字多行省略号 */
+.mle {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+/* 文字多了自動換行 */
+.break-word {
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+/* page switch animation */
+.fade-enter {
+	opacity: 0;
+	transform: translateX(-30px);
+}
+.fade-enter-active,
+.fade-exit-active {
+	opacity: 1;
+	transition: all 0.2s ease-out;
+	transform: translateX(0);
+}
+.fade-exit {
+	opacity: 0;
+	transform: translateX(30px);
+}
+
+/* scroll bar */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	background-color: #ffffff;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #dddee0;
+	border-radius: 20px;
+	box-shadow: inset 0 0 0 #ffffff;
+}
+
+.card {
+	box-sizing: border-box;
+	padding: 20px;
+	overflow-x: hidden;
+	border: 1px solid #e4e7ed;
+	border-radius: 10px;
+	background-color: #fff;
+}
+
+/* content-box */
+.content-box {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	.text {
+		margin: 30px 0;
+		font-size: 23px;
+		font-weight: 700;
+		text-align: center;
+		a {
+			text-decoration: underline !important;
+		}
+	}
+}
+
+.ant-pagination-item {
+	background-color: #F6F6F8 !important;
+}
+
+.ant-pagination-item-active {
+	background-color: #74B9FF !important;
+	border: none !important;
+}
+
+.ant-pagination-item-active a{
+	color: #FFFFFF !important;
+}
+
+.ant-pagination-prev {
+	background-color: #F6F6F8 !important;
+}
+
+.ant-pagination-next {
+	background-color: #F6F6F8 !important;
+}
+
+.ant-pagination-item-ellipsis {
+	background-color: #F6F6F8 !important;
+	border-radius: 7px;
+}
+
+.anticon {
+	background-color: #F6F6F8 !important;
+}
+
+// .ant-modal {
+// 	width: 100%;
+// 	transform-origin: 85px 43px;
+// 	overflow: hidden;
+// 	height: -webkit-fill-available;
+// }
+
+// .ant-modal-body {
+// 	height: 100%;
+// }
+
+// .ant-modal-content {
+// 	width: 100%;
+// 	height: 1000px;
+// 	top: 0;
+// 	overflow: auto;
+// }
