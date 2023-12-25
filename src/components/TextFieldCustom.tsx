@@ -20,7 +20,7 @@ export const TextFieldCustom: React.FC<TextFieldCustomProps> = ({
 	rows = 2
 }) => {
 	const [touched, setTouched] = useState<boolean>(false);
-
+    
 	return (
 		<div className="w-full flex items-start ">
 			<div className="flex-1  mr-5">
@@ -45,6 +45,7 @@ export const TextFieldCustom: React.FC<TextFieldCustomProps> = ({
 						<textarea
 							value={text}
 							onChange={e => {
+                                setTouched(true);
 								onChange(e.target.value);
 							}}
 							rows={rows}

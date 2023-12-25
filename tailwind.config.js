@@ -16,6 +16,7 @@ export default {
       levelMedium: "#00d2d3",
       levelHard: "#8395a7",
       error: "#FF3333"
+
     },
     backgroundImage: {
       'login-bg': "url(./src/assets/images/login_bg.svg)"

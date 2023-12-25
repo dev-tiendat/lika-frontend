@@ -14,6 +14,7 @@ import { Gender, Role, Status, UserProfile } from "@/interface/user";
 import RoleComponent from "@/components/Role";
 import ActionButtonsDropdown from "@/components/Table/ActionButtonsDropdown";
 import callToast, { ToastType } from "@/common/callToast";
+import { pageSizeOptions } from "@/common/constants";
 
 const tableHeaderList: TableHeader[] = [
 	{
@@ -140,6 +141,7 @@ export const UserView = () => {
 
 	const handleChangePage = (page: number, pageSize: number) => {
 		setCurrentPage(page);
+		setLimit(pageSize);
 	};
 
 	const handleChangeSelectRole = (role: number) => {
@@ -180,7 +182,7 @@ export const UserView = () => {
 
 	const renderTableRowItem = (item: UserProfile, index: number) => {
 		return (
-			<TableRow key={item.id} >
+			<TableRow key={item.id}>
 				<TableCell>{item.id}</TableCell>
 				<TableCell>
 					<div className="flex flex-row relative items-center">
@@ -224,7 +226,7 @@ export const UserView = () => {
 		<div className="card min-h-full">
 			<div className="flex flex-row justify-between items-center mb-5">
 				<h3 className="text-xl font-semibold text-blackOne">Quản lý người dùng</h3>
-				<AddNewButton label="người dùng" onClick={() => navigate("/users/add")}/>
+				<AddNewButton label="người dùng" onClick={() => navigate("/users/add")} />
 			</div>
 			<div className="mb-5 flex flex-row items-center justify-between">
 				<div className="search-filter">
@@ -280,11 +282,12 @@ export const UserView = () => {
 							<TableBody>{data?.map((item, index) => renderTableRowItem(item, index))}</TableBody>
 						</Table>
 					</TableContainer>
-					<div className="flex flex-row justify-end p-5">
+					<div className="flex flex-row justify-end py-5">
 						<Pagination
 							current={currentPage}
 							onChange={handleChangePage}
-							showSizeChanger={false}
+							pageSizeOptions={pageSizeOptions}
+							showSizeChanger
 							defaultCurrent={1}
 							total={totalElement}
 						/>

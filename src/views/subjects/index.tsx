@@ -13,6 +13,7 @@ import RoleComponent from "@/components/Role";
 import ActionButtonsDropdown from "@/components/Table/ActionButtonsDropdown";
 import callToast, { ToastType } from "@/common/callToast";
 import { Subject } from "@/interface/subject";
+import { pageSizeOptions } from "@/common/constants";
 
 const tableHeaderList: TableHeader[] = [
 	{
@@ -72,14 +73,21 @@ export const SubjectView = () => {
 		loadData();
 	}, [loadData]);
 
-	const handleClickEdit = (user: Subject) => {};
+	const handleClickEdit = (subject: Subject) => {
+		navigate(`/subjects/${subject.id}/edit`, { state: subject });
+	};
 
-	const handleClickGiveAdmin = (id: string | number) => {};
+	const handleClickRemove = async (id: string | number) => {
+		const { response, error } = await APIManager.DELETE<Subject>(`/v1/api/subjects/${id}`);
 
-	const handleClickRemove = (id: string | number) => {};
+		if (APIManager.isSucceed(response)) {
+			callToast(ToastType.SUCCESS, "Xóa môn học " + id + " thành công!");
+		}
+	};
 
 	const handleChangePage = (page: number, pageSize: number) => {
 		setCurrentPage(page);
+		setLimit(pageSize);
 	};
 
 	const handleChangeLimit = (limit: number) => {
@@ -118,7 +126,7 @@ export const SubjectView = () => {
 		<div className="card min-h-full">
 			<div className="flex flex-row justify-between items-center mb-5">
 				<h3 className="text-xl font-semibold text-blackOne">Quản lý môn học</h3>
-				<AddNewButton label="môn học" onClick={() => navigate("/subjects/add")}/>
+				<AddNewButton label="môn học" onClick={() => navigate("/subjects/add")} />
 			</div>
 			<div className="mb-5 flex flex-row items-center justify-between">
 				<div className="search-filter">
@@ -156,7 +164,8 @@ export const SubjectView = () => {
 						<Pagination
 							current={currentPage}
 							onChange={handleChangePage}
-							showSizeChanger={false}
+							pageSizeOptions={pageSizeOptions}
+							showSizeChanger
 							defaultCurrent={1}
 							total={totalElement}
 						/>

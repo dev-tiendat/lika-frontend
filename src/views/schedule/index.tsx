@@ -6,20 +6,19 @@ import TableSearch from "@/components/Table/TableSearch";
 import TableHeaderItem from "@/components/Table/TableHeaderItem";
 import { AddNewButton } from "@/components/Table/AddNewButton";
 import { useNavigate } from "react-router-dom";
-import SvgIcon from "@/components/SvgIcon";
-import doneIcon from "@/assets/images/done.png";
+import dayjs from "dayjs";
 import { IMenuItem, Order, PaginationGenericData, TableFilter, TableHeader } from "@/interface/table";
 import { Role, UserInfo, UserProfile } from "@/interface/user";
 import ActionButtonsDropdown from "@/components/Table/ActionButtonsDropdown";
 import callToast, { ToastType } from "@/common/callToast";
 import { Question, Status } from "@/interface/question";
-import { HoverShowAnswer } from "./HoverShowQuestion";
 import TypeComponent from "@/components/QuestionType";
 import LevelComponent from "@/components/QuestionLevel";
 import { Subject } from "@/interface/subject";
 import { useAppSelector } from "@/store/hooks";
 import global from "@/store/global";
 import { pageSizeOptions } from "@/common/constants";
+import { Schedule } from "@/interface/schedule";
 
 const tableHeaderList: TableHeader[] = [
 	{
@@ -27,25 +26,25 @@ const tableHeaderList: TableHeader[] = [
 		sortKey: "id"
 	},
 	{
-		title: "Nội dung câu hỏi",
-		sortKey: "content"
+		title: "Tên lịch thi",
+		sortKey: "title"
 	},
 	{
-		title: "Đáp án"
+		title: "Mã môn học"
 	},
 	{
-		title: "Loại câu",
+		title: "Tên môn học",
 		sortKey: "type"
 	},
 	{
-		title: "Độ khó",
+		title: "Trạng thái",
 		sortKey: "level"
 	},
 	{
-		title: "Chương"
+		title: "Giờ thi"
 	},
 	{
-		title: "Môn học"
+		title: "Ngày thi"
 	},
 	{
 		title: "Người tạo"
@@ -55,10 +54,12 @@ const tableHeaderList: TableHeader[] = [
 	}
 ];
 
-const helperTextList = ["ID", "Nội dung câu hỏi", "Tên chương"];
+const helperTextList = ["ID", "Tên lịch thi", "Tên người tạo"];
 
-export const UserView = () => {
-	const [data, setData] = useState<Question[] | undefined>(undefined);
+const DATE_FORMAT = "DD/MM/YYYY";
+
+export const ScheduleView = () => {
+	const [data, setData] = useState<Schedule[] | undefined>(undefined);
 	const [sortBy, setSortBy] = useState<string>(tableHeaderList[0].sortKey!);
 	const [order, setOrder] = useState<Order>(Order.DESC);
 	const [limit, setLimit] = useState<number>(10);
@@ -83,7 +84,7 @@ export const UserView = () => {
 			teacherId: selectedTeacher
 		};
 
-		const { response, error } = await APIManager.GET<PaginationGenericData<Question>>("/v1/api/questions", params);
+		const { response, error } = await APIManager.GET<PaginationGenericData<Schedule>>("/v1/api/examSchedule", params);
 
 		if (APIManager.isSucceed(response)) {
 			setData(response!.data!.content);
@@ -196,25 +197,21 @@ export const UserView = () => {
 		setCurrentPage(1);
 	};
 
-	const renderTableRowItem = (item: Question, index: number) => {
+	const convertDate = (time: number, format?: string) => dayjs(time).format(format || DATE_FORMAT);
+
+	const renderTableRowItem = (item: Schedule, index: number) => {
 		return (
 			<TableRow key={item.id}>
 				<TableCell>{item.id}</TableCell>
-				<TableCell>{item.content}</TableCell>
-				<TableCell>
-					<HoverShowAnswer content={item.content} answers={item.answers} />
-				</TableCell>
-				<TableCell>
-					<TypeComponent type={item.type} />
-				</TableCell>
-				<TableCell>
-					<LevelComponent level={item.level} />
-				</TableCell>
-				<TableCell>{item.chapter.chapterName}</TableCell>
-				<TableCell>{item.subject.subjectName}</TableCell>
-				<TableCell>{item.teacher.firstName + " " + item.teacher.lastName}</TableCell>
+				<TableCell>{item.title}</TableCell>
+				<TableCell>{item.examSet?.subject.id}</TableCell>
+				<TableCell>{item.examSet?.subject.subjectName}</TableCell>
+				<TableCell>{item.status}</TableCell>
+				<TableCell>{convertDate(item.publishedAt,"hh:mm")}</TableCell>
+				<TableCell>{convertDate(item.publishedAt)}</TableCell>
+				<TableCell>{item.teacher?.firstName + " " + item.teacher?.lastName}</TableCell>
 				<TableCell align={"right"}>
-					{(currentUser!.roles.indexOf(Role.ROLE_ADMIN) !== -1 || currentUser!.id === item.teacher.id) && (
+					{/* {(currentUser!.roles.indexOf(Role.ROLE_ADMIN) !== -1 || currentUser!.id === item.teacher.id) && (
 						<ActionButtonsDropdown
 							labelPrimary="câu hỏi"
 							status={item.status === Status.ENABLE}
@@ -222,7 +219,7 @@ export const UserView = () => {
 							onClickEdit={() => handleClickEdit(item)}
 							onClickRemove={() => handleClickRemove(item.id)}
 						/>
-					)}
+					)} */}
 				</TableCell>
 			</TableRow>
 		);
@@ -231,15 +228,15 @@ export const UserView = () => {
 	return (
 		<div className="card min-h-full">
 			<div className="flex flex-row justify-between items-center mb-5">
-				<h3 className="text-xl font-semibold text-blackOne">Quản lý câu hỏi</h3>
+				<h3 className="text-xl font-semibold text-blackOne">Quản lý lịch thi</h3>
 				{currentUser!.roles.indexOf(Role.ROLE_TEACHER) !== -1 && (
-					<AddNewButton label="câu hỏi" onClick={() => navigate("/questions/add")} />
+					<AddNewButton label="lịch thi" onClick={() => navigate("/questions/add")} />
 				)}
 			</div>
 			<div className="mb-5 flex flex-row items-center justify-between">
 				<div className="search-filter">
 					<TableSearch
-						titleHelper="Tìm kiếm câu hỏi"
+						titleHelper="Tìm kiếm lịch thi"
 						helperTextList={helperTextList}
 						search={search}
 						onChangeText={text => handleChangeTextSearch(text)}
@@ -260,14 +257,6 @@ export const UserView = () => {
 						allowClear
 						options={subjectOptions}
 					/>
-					{currentUser!.roles.indexOf(Role.ROLE_TEACHER) !== -1 && (
-						<button
-							onClick={() => setSelectedTeacher(currentUser!.id)}
-							className="h-[40px] px-5 py-2 rounded-lg text-white font-semibold ml-[10px] bg-primary"
-						>
-							Giảng viên soạn
-						</button>
-					)}
 					<button
 						onClick={resetFilter}
 						className="h-[40px] px-10 py-2 rounded-lg text-white font-semibold ml-[10px] bg-secondary"
@@ -281,7 +270,7 @@ export const UserView = () => {
 			{data?.length !== 0 ? (
 				<>
 					<TableContainer component={Paper}>
-						<Table aria-label="Danh sách câu hỏi">
+						<Table aria-label="Danh sách lịch thi">
 							<TableHead sx={{ backgroundColor: "#F5F5F5" }}>
 								<TableRow>
 									{tableHeaderList.map((item, index) => (
@@ -319,4 +308,4 @@ export const UserView = () => {
 	);
 };
 
-export default UserView;
+export default ScheduleView;

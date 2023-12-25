@@ -50,7 +50,7 @@ const navigation: Menu.MenuOptions[] = [
 		icon: "exam"
 	},
 	{
-		path: "/schedules",
+		path: "/schedule",
 		roles: [Role.ROLE_ADMIN, Role.ROLE_TEACHER],
 		title: "Lịch thi",
 		icon: "schedule"

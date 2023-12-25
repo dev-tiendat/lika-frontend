@@ -57,7 +57,7 @@ const tableHeaderList: TableHeader[] = [
 	}
 ];
 
-const helperTextList = ["ID", "Nội dung câu hỏi", "Tên chương"];
+const helperTextList = ["ID", "Tên bộ dề thi", "Tên môn học", "Tên người tạo"];
 
 const roleOptions: TableFilter[] = [
 	{ value: 1, label: "Quản trị viên" },
@@ -221,7 +221,7 @@ export const UserView = () => {
 		<div className="card min-h-full">
 			<div className="flex flex-row justify-between items-center mb-5">
 				<h3 className="text-xl font-semibold text-blackOne">Quản lý bộ đề thi</h3>
-				<AddNewButton label="câu hỏi" />
+				<AddNewButton label="bộ đề thi" />
 			</div>
 			<div className="mb-5 flex flex-row items-center justify-between">
 				<div className="search-filter">
@@ -252,7 +252,7 @@ export const UserView = () => {
 			{data?.length !== 0 ? (
 				<>
 					<TableContainer component={Paper}>
-						<Table aria-label="Danh sách câu hỏi">
+						<Table aria-label="Danh sách">
 							<TableHead sx={{ backgroundColor: "#F5F5F5" }}>
 								<TableRow>
 									{tableHeaderList.map((item, index) => (

@@ -26,5 +26,14 @@ export const subjectRouter: Array<RouteObject> = [
 			title: "Thêm môn học",
 			key: "Add subject"
 		}
+	},
+	{
+		path: "/subjects/:id/edit",
+		element: lazyLoad(React.lazy(() => import("@/views/subjects/EditOrUpdateSubject"))),
+		meta: {
+			requiresRoles: [Role.ROLE_ADMIN],
+			title: "Thêm môn học",
+			key: "Add subject"
+		}
 	}
 ];

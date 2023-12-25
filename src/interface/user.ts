@@ -1,3 +1,6 @@
+
+import * as Yup from "yup";
+
 export enum Role {
 	ROLE_ADMIN = "ROLE_ADMIN",
 	ROLE_TEACHER = "ROLE_TEACHER",
@@ -8,8 +11,6 @@ export enum Status {
 	ACTIVE = "ACTIVE",
 	INACTIVE = "INACTIVE"
 }
-
-import * as Yup from "yup";
 
 export enum Gender {
 	FEMALE = "FEMALE",

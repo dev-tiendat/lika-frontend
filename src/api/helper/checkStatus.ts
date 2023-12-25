@@ -29,7 +29,7 @@ export const checkStatus = (status: number): void => {
 			message.error("Yêu cầu đã hết thời gian chờ! Vui lòng thử lại sau");
 			break;
 		case 409: 
-			message.error("Người dùng đã có dữ liệu trên hệ thống, không thể xóa!");
+		callToast(ToastType.ERROR, "Dữ liệu đã được sử dụng, không thể xóa !");
 			break;
 		case 500:
 			message.error("Có lỗi phía máy chủ!");

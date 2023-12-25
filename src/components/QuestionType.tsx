@@ -26,7 +26,7 @@ export const TypeComponent: React.FC<RoleProps> = ({ type, styles }) => {
 	}, [type]);
 	return (
 		<div className={`rounded-md ${backgroundColor} px-1 py-1 ${styles} flex justify-center items-center`}>
-			<p className="text-white py-1 text-[13px]">{typeName}</p>
+			<p className="text-white py-1 text-[13px] text-center">{typeName}</p>
 		</div>
 	);
 };

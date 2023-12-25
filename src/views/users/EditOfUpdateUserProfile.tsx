@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import TextFieldInput from "@/components/TextFieldInput";
-import { userSchema } from "@/interface/user";
+import { Gender, Role, userSchema } from "@/interface/user";
 import {
 	FormControl,
 	InputLabel,
@@ -15,7 +15,8 @@ import {
 	TextField,
 	Button,
 	Select,
-	MenuItem
+	MenuItem,
+	SelectChangeEvent
 } from "@mui/material";
 import { EyeOutline, EyeOffOutline } from "mdi-material-ui";
 import { DatePicker } from "antd";
@@ -31,11 +32,11 @@ export const EditOrUpdateUserProfile = () => {
 	const navigate = useNavigate();
 
 	const handleSubmit = async (data: any) => {
-		const { response, error } = await APIManager.POST("/v1/api/users/", data);
+		const { response, error } = await APIManager.POST("/v1/api/users", data);
 
 		if (APIManager.isSucceed(response)) {
 			callToast(ToastType.SUCCESS, "Thêm người dùng thành công");
-			navigate("/users/");
+			navigate("/users");
 		}
 	};
 
@@ -47,7 +48,10 @@ export const EditOrUpdateUserProfile = () => {
 				email: "",
 				firstName: "",
 				lastName: "",
-				dateOfBirth: dayjs("2000-01-01", "YYYY-MM-DD")
+				gender: Gender.MAlE,
+				dateOfBirth: undefined,
+				address: "",
+				roles: []
 			}}
 			validationSchema={userSchema}
 			onSubmit={values => {
@@ -55,7 +59,7 @@ export const EditOrUpdateUserProfile = () => {
 				console.log(values);
 			}}
 		>
-			{({ errors, values, setFieldValue }) => (
+			{({ errors, values, setFieldValue, isValid }) => (
 				<div className="flex flex-col items-center min-w-[550px] h-full bg-cover shadow-2xl bg-login-bg bg-center max-h-full overflow-auto">
 					<div className="my-14 flex flex-row w-[800px] justify-center items-center relative">
 						<button className="p-3 hover:bg-levelHard bg-primary rounded-md absolute left-0" onClick={() => navigate("/users")}>
@@ -66,6 +70,8 @@ export const EditOrUpdateUserProfile = () => {
 							size="large"
 							variant="contained"
 							type="submit"
+							disabled={!isValid}
+							onClick={() => handleSubmit(values)}
 							sx={{
 								position: "absolute",
 								right: 0,
@@ -101,7 +107,7 @@ export const EditOrUpdateUserProfile = () => {
 								type={showPassword ? "text" : "password"}
 								endAdornment={
 									<InputAdornment position="end">
-										<IconButton edge="end" aria-label="toggle password visibility">
+										<IconButton edge="end" aria-label="toggle password visibility" onClick={() => setShowPassword(!showPassword)}>
 											{showPassword ? <EyeOutline /> : <EyeOffOutline />}
 										</IconButton>
 									</InputAdornment>
@@ -129,9 +135,16 @@ export const EditOrUpdateUserProfile = () => {
 						/>
 						<FormControl>
 							<FormLabel sx={{ fontSize: "0.875rem" }}>Giới tính</FormLabel>
-							<RadioGroup row defaultValue="male" aria-label="gender" name="account-settings-info-radio">
-								<FormControlLabel value="male" label="Nam" control={<Radio />} />
-								<FormControlLabel value="female" label="Nữ" control={<Radio />} />
+							<RadioGroup
+								row
+								defaultValue="male"
+								aria-label="gender"
+								name="account-settings-info-radio"
+								value={values.gender}
+								onChange={event => setFieldValue("gender", event.target.value)}
+							>
+								<FormControlLabel value={Gender.MAlE} label="Nam" control={<Radio />} />
+								<FormControlLabel value={Gender.FEMALE} label="Nữ" control={<Radio />} />
 							</RadioGroup>
 						</FormControl>
 						<DatePicker
@@ -142,10 +155,18 @@ export const EditOrUpdateUserProfile = () => {
 						<TextField fullWidth id="address" label="Địa chỉ" />
 						<FormControl fullWidth>
 							<InputLabel>Vai trò</InputLabel>
-							<Select label="Role" defaultValue="ADMIN" multiline>
-								<MenuItem value="ADMIN">Quản trị viên</MenuItem>
-								<MenuItem value="TEACHER">Giảng viên</MenuItem>
-								<MenuItem value="STUDENT">Học sinh</MenuItem>
+							<Select
+								label="Role"
+								value={values.roles}
+								onChange={e => {
+									setFieldValue("roles", e.target.value);
+									console.log(e.target.value);
+								}}
+								multiple
+							>
+								<MenuItem value={Role.ROLE_ADMIN}>Quản trị viên</MenuItem>
+								<MenuItem value={Role.ROLE_TEACHER}>Giảng viên</MenuItem>
+								<MenuItem value={Role.ROLE_STUDENT}>Học sinh</MenuItem>
 							</Select>
 						</FormControl>
 					</div>

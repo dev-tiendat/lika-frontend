@@ -1,16 +1,16 @@
 import React, { useMemo } from "react";
 import { Role } from "@/interface/user";
 import { Typography } from "@mui/material";
-import { Level } from "@/interface/question";
+import { Level, Status } from "@/interface/question";
 
-type QuestionLevelProps = {
-	level: Level;
+type QuestionStatusProps = {
+	status: Status;
 	styles?: string;
 };
 
-export const LevelComponent: React.FC<QuestionLevelProps> = ({ level, styles }) => {
+export const QuestionStatusComponent: React.FC<QuestionStatusProps> = ({ status, styles }) => {
 	const backgroundColor = useMemo(() => {
-		switch (level) {
+		switch (status) {
 			case Level.EASY:
 				return "bg-levelEasy";
 			case Level.MEDIUM:
@@ -18,9 +18,9 @@ export const LevelComponent: React.FC<QuestionLevelProps> = ({ level, styles }) 
 			case Level.HARD:
 				return "bg-levelHard";
 		}
-	}, [level]);
+	}, [status]);
 	const levelName = useMemo(() => {
-		switch (level) {
+		switch (status) {
 			case Level.EASY:
 				return "Dễ";
 			case Level.MEDIUM:
@@ -28,7 +28,7 @@ export const LevelComponent: React.FC<QuestionLevelProps> = ({ level, styles }) 
 			case Level.HARD:
 				return "Khó";
 		}
-	}, [level]);
+	}, [status]);
 	return (
 		<div className={`rounded-md ${backgroundColor} px-1 py-1 ${styles} flex justify-center items-center`}>
 			<p className="text-white py-1 text-center">{levelName}</p>
@@ -36,4 +36,4 @@ export const LevelComponent: React.FC<QuestionLevelProps> = ({ level, styles }) 
 	);
 };
 
-export default LevelComponent;
+export default QuestionStatusComponent;

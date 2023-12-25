@@ -1,8 +1,8 @@
 import React from "react";
 import lazyLoad from "../utils/LazyLoad";
 import { RouteObject } from "@/routers/interface";
-import LoginView from "../../views/auth/login/";
-import SignUpView from "../../views/auth/signUp/";
+import LoginView from "../../views/auth/login";
+import SignUpView from "../../views/auth/signUp";
 
 const authRouter: Array<RouteObject> = [
 	{

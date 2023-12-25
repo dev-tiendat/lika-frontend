@@ -5,10 +5,10 @@ import { userSchema } from "@/interface/user";
 import { Button } from "@mui/material";
 import { EyeOutline, EyeOffOutline } from "mdi-material-ui";
 import { Select } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import SvgIcon from "@/components/SvgIcon";
 import TextFieldCustom from "@/components/TextFieldCustom";
-import { Answer, Correct, Level, Question, Type } from "@/interface/question";
+import { Answer, Correct, Level, Question, Type, questionSchema } from "@/interface/question";
 import { LIST_CHAR } from "@/utils/textUtils";
 import APIManager from "@/api/";
 import { PaginationGenericData } from "@/interface/table";
@@ -42,11 +42,12 @@ const levelOptions = [
 ];
 
 export const EditOrUpdateQuestion = () => {
+	const { state } = useLocation();
 	const [subjectOptions, setSubjectOptions] = useState<any>([]);
 	const [chapterOptions, setChapterOptions] = useState<any>([]);
-	const [selectedSubject, setSelectedSubject] = useState<string>("");
-	const [answerList, setAnswerList] = useState<Answer[]>([{ content: "", isCorrect: Correct.FALSE }]);
-	const [questionMultiple, setQuestionMultiple] = useState<boolean>(false);
+	const [selectedSubject, setSelectedSubject] = useState<string>(state ? state.subject.id : "");
+	const [answerList, setAnswerList] = useState<Answer[]>(state ? state.answers : [{ content: "", isCorrect: Correct.FALSE }]);
+	const [questionMultiple, setQuestionMultiple] = useState<boolean>(state && state.type === Type.MULTIPLE ? true : false);
 	const navigate = useNavigate();
 
 	const loadSubjectHaveChapterData = async () => {
@@ -100,7 +101,9 @@ export const EditOrUpdateQuestion = () => {
 		if (!isAnswersValid()) {
 			callToast(
 				ToastType.ERROR,
-				questionMultiple ? "Đáp án đúng cần nhiều hơn 1 đáp án và ít nhất 1 đáp án sai!" : "Chỉ cần 1 đáp án dúng!"
+				questionMultiple
+					? "Đáp án đúng cần nhiều hơn 1 đáp án và ít nhất 1 đáp án sai!"
+					: "Không thể chọn nhiều hơn 1 đáp án dúng!"
 			);
 			return;
 		}
@@ -110,16 +113,19 @@ export const EditOrUpdateQuestion = () => {
 			...data
 		};
 
-		const { response, error } = await APIManager.POST<Question>("/v1/api/questions", data);
+		const { response, error } = !state
+			? await APIManager.POST<Question>(`/v1/api/questions`, data)
+			: await APIManager.PUT<Question>(`/v1/api/questions/${state.id}`, data);
 
 		if (APIManager.isSucceed(response)) {
-			callToast(ToastType.SUCCESS, "Thêm câu hỏi thành công!");
+			callToast(ToastType.SUCCESS, state ? "Cập nhật câu hỏi thành công!" : "Thêm câu hỏi thành công!");
 			navigate("/questions");
 		}
 	};
 
 	useEffect(() => {
 		loadSubjectHaveChapterData();
+		if (state) loadChapterBySubject(selectedSubject);
 	}, []);
 
 	const renderChapterItem = (answer: Answer, index: number) => {
@@ -160,16 +166,16 @@ export const EditOrUpdateQuestion = () => {
 			</div>
 		);
 	};
-
+	console.log(state);
 	return (
 		<Formik
 			initialValues={{
-				chapterId: "",
-				content: "",
-				type: Type.SINGLE,
-				level: Level.EASY
+				chapterId: state ? state.chapter.id : "",
+				content: state ? state.content : "",
+				type: state ? state.type : Type.SINGLE,
+				level: state ? state.level : Level.EASY
 			}}
-			validationSchema={userSchema}
+			validationSchema={questionSchema}
 			onSubmit={values => {
 				console.log(values);
 			}}
@@ -183,7 +189,7 @@ export const EditOrUpdateQuestion = () => {
 						>
 							<SvgIcon name="arrow-left-bold" size={17} color="#ffffff" />
 						</button>
-						<h2 className="font-bold text-2xl">Tạo câu hỏi</h2>
+						<h2 className="font-bold text-2xl">{state ? "Cập nhật câu hỏi" : "Tạo câu hỏi"}</h2>
 
 						<Button
 							size="large"
@@ -200,7 +206,7 @@ export const EditOrUpdateQuestion = () => {
 								backgroundColor: "rgb(116, 185, 255)"
 							}}
 						>
-							Thêm câu hỏi
+							{state ? "Cập nhật câu hỏi" : "Thêm câu hỏi"}
 						</Button>
 					</div>
 					<>
@@ -208,9 +214,10 @@ export const EditOrUpdateQuestion = () => {
 							<TextFieldCustom
 								textarea={true}
 								rows={4}
+                                errorMessage={errors.content as string}
 								label="Nội dung *"
 								text={values.content}
-								onChange={text => setFieldValue("content", text)}
+								onChange={text => {setFieldValue("content", text)}}
 							/>
 						</div>
 						<h4 className="text-secondary font-medium text-xl text-[20px] mt-5">Danh sách câu hỏi</h4>
@@ -262,8 +269,8 @@ export const EditOrUpdateQuestion = () => {
 									style={{ width: "100%", height: 45, backgroundColor: "#F9FAFB" }}
 									onChange={value => {
 										loadChapterBySubject(value);
-										setFieldValue("chapterId", "");
 										setSelectedSubject(value);
+										setFieldValue("chapterId", "");
 									}}
 									options={subjectOptions}
 								/>
