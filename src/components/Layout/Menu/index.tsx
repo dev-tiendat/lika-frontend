@@ -56,6 +56,24 @@ const navigation: Menu.MenuOptions[] = [
 		icon: "schedule"
 	},
 	{
+		path: "/schedule/me",
+		roles: [Role.ROLE_STUDENT],
+		title: "Lịch thi",
+		icon: "schedule"
+	},
+	{
+		path: "/takeTest",
+		roles: [Role.ROLE_STUDENT],
+		title: "Làm bài thi",
+		icon: "clock"
+	},
+	{
+		path: "/tests",
+		roles: [Role.ROLE_STUDENT],
+		title: "Bài thi đã làm",
+		icon: "old-test"
+	},
+	{
 		path: "grades",
 		roles: [Role.ROLE_ADMIN, Role.ROLE_TEACHER],
 		title: "Điểm thi",

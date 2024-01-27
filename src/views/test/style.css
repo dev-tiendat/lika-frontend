@@ -1,0 +1,24 @@
+.ant-checkbox-checked .ant-checkbox-inner {
+	border-color: #feca57 !important;
+	background-color: #feca57 !important;
+}
+
+.ant-checkbox:hover::after {
+	border-color: #feca57 !important;
+}
+.ant-checkbox:hover .ant-checkbox-inner {
+	border-color: #feca57 !important;
+}
+
+.ant-radio:hover .ant-radio-inner {
+	border-color: #feca57 !important;
+}
+
+.ant-radio-checked .ant-radio-inner {
+	border-color: #feca57 !important;
+	background-color: #feca57 !important;
+}
+
+.custom-scrool::-webkit-scrollbar {
+	width: 4px;
+}

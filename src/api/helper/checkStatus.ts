@@ -28,8 +28,8 @@ export const checkStatus = (status: number): void => {
 		case 408:
 			message.error("Yêu cầu đã hết thời gian chờ! Vui lòng thử lại sau");
 			break;
-		case 409: 
-		callToast(ToastType.ERROR, "Dữ liệu đã được sử dụng, không thể xóa !");
+		case 409:
+			callToast(ToastType.ERROR, "Dữ liệu đã được sử dụng, không thể xóa !");
 			break;
 		case 500:
 			message.error("Có lỗi phía máy chủ!");
@@ -62,6 +62,9 @@ export const checkStatus = (status: number): void => {
 			break;
 		case 2006:
 			callToast(ToastType.ERROR, "Token hết hạn, vui lòng đăng nhập lại!");
+			break;
+		case 2007:
+			callToast(ToastType.ERROR, "Số lượng câu hỏi hiện tại không đủ để tạo đề thi, vui lòng thêm câu hỏi!");
 			break;
 		default:
 			message.error("Yêu cầu không thành công!");

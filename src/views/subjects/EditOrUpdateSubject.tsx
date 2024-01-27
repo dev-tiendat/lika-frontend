@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { EyeOutline, EyeOffOutline } from "mdi-material-ui";
 import { DatePicker, Select } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SvgIcon from "@/components/SvgIcon";
 import TextFieldCustom from "@/components/TextFieldCustom";
 import { Subject, subjectSchema } from "@/interface/subject";
@@ -49,13 +49,14 @@ const creditHoursOptions = [
 ];
 
 export const EditOrUpdateSubject = () => {
+	const { state } = useLocation();
 	const [chapterList, setChapterList] = useState<string[]>([""]);
 	const navigate = useNavigate();
-
+	console.log(state);
 	const handleSubmit = async (values: any) => {
 		const data = {
 			...values,
-			chapterNames: chapterList
+			chapterNames: chapterList.length === 1 && chapterList[0] === "" ? null : chapterList
 		};
 
 		const { response, error } = await APIManager.POST<Subject>("/v1/api/subjects", data);

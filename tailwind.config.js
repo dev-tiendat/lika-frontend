@@ -15,7 +15,10 @@ export default {
       levelEasy: "#ff7979",
       levelMedium: "#00d2d3",
       levelHard: "#8395a7",
-      error: "#FF3333"
+      error: "#FF3333",
+      blue: "#0000FF",
+      questionText: "#3C4852",
+      title: "#333D46"
 
     },
     backgroundImage: {

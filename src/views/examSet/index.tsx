@@ -27,6 +27,10 @@ import { Question } from "@/interface/question";
 import TypeComponent from "@/components/QuestionType";
 import LevelComponent from "@/components/QuestionLevel";
 import { ExamSet } from "@/interface/examSet";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/store/hooks";
+import global from "@/store/global";
+import ExamSetStatusComponent from "@/components/ExamSetStatus";
 
 const tableHeaderList: TableHeader[] = [
 	{
@@ -74,11 +78,12 @@ interface RowItemProps {
 	item: ExamSet;
 	onEdit?: () => void;
 	onRemove?: () => void;
-	onToggleStatus: () => void;
+	onToggleStatus?: () => void;
 }
 
 const RowItem: React.FC<RowItemProps> = ({ item, onEdit, onRemove, onToggleStatus }) => {
 	const [open, setOpen] = useState<boolean>(false);
+	const currentUser = useAppSelector(global.selectors.selectUserProfile);
 
 	return (
 		<>
@@ -88,18 +93,20 @@ const RowItem: React.FC<RowItemProps> = ({ item, onEdit, onRemove, onToggleStatu
 				</TableCell>
 				<TableCell>{item.id}</TableCell>
 				<TableCell>{item.name}</TableCell>
-				<TableCell>{item.status}</TableCell>
+				<TableCell><ExamSetStatusComponent status={item.status}/></TableCell>
 				<TableCell>{item.subject.subjectName}</TableCell>
 				<TableCell>{item.createdBy.firstName + " " + item.createdBy.lastName}</TableCell>
 				<TableCell>{item.exams.length}</TableCell>
 				<TableCell align={"right"}>
-					<ActionButtonsDropdown
-						labelPrimary="câu hỏi"
-						// status={item.status === Status.ACTIVE}
-						onClickEdit={onEdit}
-						onClickToggleStatus={onToggleStatus}
-						onClickRemove={onRemove}
-					/>
+					{(currentUser!.roles.indexOf(Role.ROLE_ADMIN) !== -1 || currentUser!.id === item.createdBy.id) && (
+						<ActionButtonsDropdown
+							labelPrimary="đề thi"
+							// status={item.status === Status.ACTIVE}
+							onClickEdit={onEdit}
+							onClickToggleStatus={onToggleStatus}
+							onClickRemove={onRemove}
+						/>
+					)}
 				</TableCell>
 			</TableRow>
 			<TableRow>
@@ -145,6 +152,7 @@ export const UserView = () => {
 	const [search, setSearch] = useState<string>("");
 	const [selectedRole, setSelectedRole] = useState<number>();
 	const [selectedStatus, setSelectedStatus] = useState<number>();
+	const navigate = useNavigate();
 
 	const loadData = useCallback(async () => {
 		const params = {
@@ -171,11 +179,11 @@ export const UserView = () => {
 		loadData();
 	}, [loadData]);
 
-	const handleClickEdit = (user: UserProfile) => {};
+	const handleClickEdit = (examSet: ExamSet) => {
+		navigate(`/examSets/${examSet.id}/edit`,{state: examSet});
+	};
 
 	const handleClickToggleStatus = async (username: string, status: Status) => {};
-
-	const handleClickGiveAdmin = (id: string | number) => {};
 
 	const handleClickRemove = (id: string | number) => {};
 
@@ -221,7 +229,7 @@ export const UserView = () => {
 		<div className="card min-h-full">
 			<div className="flex flex-row justify-between items-center mb-5">
 				<h3 className="text-xl font-semibold text-blackOne">Quản lý bộ đề thi</h3>
-				<AddNewButton label="bộ đề thi" />
+				<AddNewButton label="bộ đề thi" onClick={() => navigate("/examSets/add")} />
 			</div>
 			<div className="mb-5 flex flex-row items-center justify-between">
 				<div className="search-filter">
@@ -266,7 +274,7 @@ export const UserView = () => {
 									))}
 								</TableRow>
 							</TableHead>
-							<TableBody>{data?.map((item, index) => <RowItem item={item} />)}</TableBody>
+							<TableBody>{data?.map((item, index) => <RowItem item={item} onEdit={() => handleClickEdit(item)} />)}</TableBody>
 						</Table>
 					</TableContainer>
 					<div className="flex flex-row justify-end p-5">

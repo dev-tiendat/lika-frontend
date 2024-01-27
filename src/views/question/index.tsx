@@ -304,6 +304,7 @@ export const UserView = () => {
 							onChange={handleChangePage}
 							pageSizeOptions={pageSizeOptions}
 							defaultCurrent={1}
+							showSizeChanger={false}
 							total={totalElement}
 						/>
 					</div>

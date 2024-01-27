@@ -165,7 +165,7 @@ export const SubjectView = () => {
 							current={currentPage}
 							onChange={handleChangePage}
 							pageSizeOptions={pageSizeOptions}
-							showSizeChanger
+							showSizeChanger={false}
 							defaultCurrent={1}
 							total={totalElement}
 						/>

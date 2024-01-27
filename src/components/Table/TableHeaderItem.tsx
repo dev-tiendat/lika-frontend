@@ -5,7 +5,7 @@ import SvgIcon from "../SvgIcon";
 
 interface TableHeaderItemProps {
 	item: TableHeader;
-	isSelected: boolean;
+	isSelected?: boolean;
 	onChangeOrder?: (sortKey: string, order: Order) => void;
 	align?: "left" | "center" | "right" | "justify" | "inherit" | undefined;
 }

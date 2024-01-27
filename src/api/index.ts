@@ -70,7 +70,7 @@ class APIManager {
 				if (error.message.indexOf("timeout") !== -1) message.error("Yêu cầu đã hết thời gian, vui lòng thử lại sau!");
 
 				if (error.message.indexOf("Network Error") !== -1) message.error("Lỗi kết nối đến máy chủ");
-
+				
 				if (response) checkStatus(response.data.errorCode || response.status);
 
 				// if (response.data.errorCode == "2001") {

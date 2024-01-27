@@ -12,7 +12,7 @@ export const subjectRouter: Array<RouteObject> = [
 				path: "/questions",
 				element: lazyLoad(React.lazy(() => import("@/views/question"))),
 				meta: {
-					requiresRoles: [Role.ROLE_ADMIN],
+					requiresRoles: [Role.ROLE_ADMIN,Role.ROLE_TEACHER],
 					title: "Câu hỏi"
 				}
 			}
@@ -22,7 +22,7 @@ export const subjectRouter: Array<RouteObject> = [
 		path: "/questions/add",
 		element: lazyLoad(React.lazy(() => import("@/views/question/EditOrUpdateQuestion"))),
 		meta: {
-			requiresRoles: [Role.ROLE_ADMIN],
+			requiresRoles: [Role.ROLE_ADMIN,Role.ROLE_TEACHER],
 			title: "Thêm câu hỏi",
 			key: "Add subject"
 		}
@@ -31,7 +31,7 @@ export const subjectRouter: Array<RouteObject> = [
 		path: "/questions/:id/edit",
 		element: lazyLoad(React.lazy(() => import("@/views/question/EditOrUpdateQuestion"))),
 		meta: {
-			requiresRoles: [Role.ROLE_ADMIN],
+			requiresRoles: [Role.ROLE_ADMIN,Role.ROLE_TEACHER],
 			title: "Sửa câu hỏi",
 			key: "Edit subject"
 		}

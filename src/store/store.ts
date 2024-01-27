@@ -4,6 +4,7 @@ import thunk from "redux-thunk";
 import storage from "redux-persist/lib/storage";
 import auth from "./auth";
 import global from "./global";
+import test from "./test";
 
 const persistConfig = {
 	key: "root",
@@ -12,7 +13,8 @@ const persistConfig = {
 
 const reducers = persistCombineReducers(persistConfig, {
 	auth: auth.reducer,
-	global: global.reducer
+	global: global.reducer,
+	test: test.reducer
 });
 
 const store = configureStore({

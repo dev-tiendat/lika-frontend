@@ -5,12 +5,13 @@ import SvgIcon from "../SvgIcon";
 
 interface TableSearchProps {
 	search: string;
+	style?: any;
 	onChangeText?: (text: string) => void;
 	helperTextList?: string[];
 	titleHelper?: string;
 }
 
-export const TableSearch: React.FC<TableSearchProps> = ({ search, onChangeText, helperTextList, titleHelper }) => {
+export const TableSearch: React.FC<TableSearchProps> = ({ search, onChangeText, helperTextList, titleHelper,style }) => {
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
 	const handleDropdownOpen = (event: SyntheticEvent) => {
@@ -36,6 +37,7 @@ export const TableSearch: React.FC<TableSearchProps> = ({ search, onChangeText, 
 	return (
 		<TextField
 			size="small"
+			style={{ backgroundColor: "white" }}
 			placeholder="Tìm kiếm"
 			value={search}
 			onChange={handleChangeSearchText}
@@ -45,7 +47,7 @@ export const TableSearch: React.FC<TableSearchProps> = ({ search, onChangeText, 
 						<Magnify fontSize="medium" />{" "}
 					</InputAdornment>
 				),
-				style: { borderRadius: 10, paddingTop: 2, paddingBottom: 2, fontSize: "14px" },
+				style: { borderRadius: 10, paddingTop: 2, paddingBottom: 2, fontSize: "14px", ...style },
 				endAdornment: (
 					<>
 						<button

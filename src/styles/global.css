@@ -58,3 +58,7 @@ body {
 	background: #247ba0;
 	color: #fff;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}

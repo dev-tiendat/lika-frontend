@@ -12,19 +12,41 @@ export const userRouter: Array<RouteObject> = [
 				path: "/schedule",
 				element: lazyLoad(React.lazy(() => import("@/views/schedule"))),
 				meta: {
-					requiresRoles: [Role.ROLE_ADMIN],
+					requiresRoles: [Role.ROLE_ADMIN,Role.ROLE_TEACHER],
 					title: "Lịch thi"
 				}
 			}
 		]
 	},
-	// {
-	// 	path: "/schedule/add",
-	// 	element: lazyLoad(React.lazy(() => import("@/views/sche/EditOfUpdateUserProfile"))),
-	// 	meta: {
-	// 		requiresRoles: [Role.ROLE_ADMIN],
-	// 		title: "Thêm người dùng",
-	// 		key: "Add user"
-	// 	}
-	// }
+	{
+		element: <LayoutIndex />,
+		children: [
+			{
+				path: "/schedule/me",
+				element: lazyLoad(React.lazy(() => import("@/views/schedule/ScheduleForStudent"))),
+				meta: {
+					requiresRoles: [Role.ROLE_STUDENT],
+					title: "Lịch thi của sinh viên"
+				}
+			}
+		]
+	},
+	{
+		path: "/schedule/add",
+		element: lazyLoad(React.lazy(() => import("@/views/schedule/EditOrUpdateSchedule"))),
+		meta: {
+			requiresRoles: [Role.ROLE_ADMIN],
+			title: "Thêm lịch thi",
+			key: "Add schedule"
+		}
+	},
+	{
+		path: "/schedule/:id/edit",
+		element: lazyLoad(React.lazy(() => import("@/views/schedule/EditOrUpdateSchedule"))),
+		meta: {
+			requiresRoles: [Role.ROLE_ADMIN],
+			title: "Sửa lịch thi",
+			key: "edit schedule"
+		}
+	}
 ];

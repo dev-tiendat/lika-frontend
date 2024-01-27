@@ -19,6 +19,7 @@ import { useAppSelector } from "@/store/hooks";
 import global from "@/store/global";
 import { pageSizeOptions } from "@/common/constants";
 import { Schedule } from "@/interface/schedule";
+import ScheduleStatusComponent from "@/components/ScheduleStatus";
 
 const tableHeaderList: TableHeader[] = [
 	{
@@ -47,7 +48,10 @@ const tableHeaderList: TableHeader[] = [
 		title: "Ngày thi"
 	},
 	{
-		title: "Người tạo"
+		title: "Thời gian thi"
+	},
+	{
+		title: "Giảng viên"
 	},
 	{
 		title: "Thao tác"
@@ -70,6 +74,7 @@ export const ScheduleView = () => {
 	const [selectedSubject, setSelectedSubject] = useState<string>();
 	const [subjectOptions, setSubjectOptions] = useState<any>();
 	const [teacherOptions, setTeacherOptions] = useState<any>();
+	const currentDate = dayjs(new Date()).valueOf();
 	const currentUser = useAppSelector(global.selectors.selectUserProfile);
 	const navigate = useNavigate();
 
@@ -131,28 +136,25 @@ export const ScheduleView = () => {
 		loadTeacherOptions();
 	}, []);
 
-	const handleClickEdit = (question: Question) => {
-		navigate(`/questions/${question.id}/edit`, { state: question });
+	const handleClickEdit = (schedule: Schedule) => {
+		navigate(`/schedule/${schedule.id}/edit`, { state: schedule });
 	};
 
 	const handleClickRemove = async (id: number) => {
-		const { response, error } = await APIManager.DELETE<UserProfile>(`/v1/api/questions/${id}`);
+		const { response, error } = await APIManager.DELETE<UserProfile>(`/v1/api/examSchedule/${id}`);
 
 		if (APIManager.isSucceed(response)) {
-			callToast(ToastType.SUCCESS, `Xóa câu hỏi ${id} thành công!`);
+			callToast(ToastType.SUCCESS, `Xóa lịch thi ${id} thành công!`);
 			loadData();
 		}
 	};
 
 	const handleClickToggleStatus = async (id: number, status: Status) => {
-		const { response, error } = await APIManager.PATCH<UserProfile>(
-			`/v1/api/questions/${id}/${status !== Status.ENABLE ? "enable" : "disable"}`
+		const { response, error } = await APIManager.PATCH<Schedule>(
+			`/v1/api/examSchedule/${id}/${status !== Status.ENABLE ? "enable" : "cancel"}`
 		);
 		if (APIManager.isSucceed(response)) {
-			callToast(
-				ToastType.SUCCESS,
-				(status === Status.ENABLE ? "Hủy kích hoạt câu hỏi " : "Kích hoạt câu hỏi ") + id + " thành công!"
-			);
+			callToast(ToastType.SUCCESS, (status === Status.ENABLE ? "Hủy lịch thi " : "Bật lịch thi ") + id + " thành công!");
 			loadData();
 		}
 	};
@@ -206,20 +208,25 @@ export const ScheduleView = () => {
 				<TableCell>{item.title}</TableCell>
 				<TableCell>{item.examSet?.subject.id}</TableCell>
 				<TableCell>{item.examSet?.subject.subjectName}</TableCell>
-				<TableCell>{item.status}</TableCell>
-				<TableCell>{convertDate(item.publishedAt,"hh:mm")}</TableCell>
+				<TableCell>
+					<ScheduleStatusComponent
+						status={item.publishedAt < currentDate && item.status === Status.ENABLE ? undefined : item.status}
+					/>
+				</TableCell>
+				<TableCell>{convertDate(item.publishedAt, "hh:mm")}</TableCell>
 				<TableCell>{convertDate(item.publishedAt)}</TableCell>
+				<TableCell>{item.timeAllowance} phút</TableCell>
 				<TableCell>{item.teacher?.firstName + " " + item.teacher?.lastName}</TableCell>
 				<TableCell align={"right"}>
-					{/* {(currentUser!.roles.indexOf(Role.ROLE_ADMIN) !== -1 || currentUser!.id === item.teacher.id) && (
+					{item.publishedAt > currentDate && (
 						<ActionButtonsDropdown
-							labelPrimary="câu hỏi"
+							labelPrimary="lịch thi"
 							status={item.status === Status.ENABLE}
 							onClickToggleStatus={() => handleClickToggleStatus(item.id, item.status)}
 							onClickEdit={() => handleClickEdit(item)}
 							onClickRemove={() => handleClickRemove(item.id)}
 						/>
-					)} */}
+					)}
 				</TableCell>
 			</TableRow>
 		);
@@ -230,7 +237,7 @@ export const ScheduleView = () => {
 			<div className="flex flex-row justify-between items-center mb-5">
 				<h3 className="text-xl font-semibold text-blackOne">Quản lý lịch thi</h3>
 				{currentUser!.roles.indexOf(Role.ROLE_TEACHER) !== -1 && (
-					<AddNewButton label="lịch thi" onClick={() => navigate("/questions/add")} />
+					<AddNewButton label="lịch thi" onClick={() => navigate("/schedule/add")} />
 				)}
 			</div>
 			<div className="mb-5 flex flex-row items-center justify-between">
@@ -291,6 +298,7 @@ export const ScheduleView = () => {
 						<Pagination
 							current={currentPage}
 							onChange={handleChangePage}
+							showSizeChanger={false}
 							pageSizeOptions={pageSizeOptions}
 							defaultCurrent={1}
 							total={totalElement}

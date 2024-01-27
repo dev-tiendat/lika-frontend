@@ -1,6 +1,7 @@
 import { Level, Question } from "./question";
 import { Chapter, Subject } from "./subject";
 import { UserInfo } from "./user";
+import * as Yup from "yup";
 
 export enum Status {
 	USED = "USED",
@@ -12,6 +13,7 @@ export interface Criteria {
 	quantity: number;
 	level: Level;
 	chapter: Chapter;
+	chapterId: number;
 }
 
 export interface Exam {
@@ -25,7 +27,12 @@ export interface ExamSet {
 	name: string;
 	status: Status;
 	subject: Subject;
-    createdBy: UserInfo;
+	createdBy: UserInfo;
 	criteria: Criteria[];
 	exams: Exam[];
 }
+
+export const examSetSchema = Yup.object().shape({
+	name: Yup.string().required("Tên bộ đề thi không được để trống"),
+	quantityOfExam: Yup.number().required("Số lượng không được để trống")
+})

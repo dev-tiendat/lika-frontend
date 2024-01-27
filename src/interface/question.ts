@@ -19,7 +19,7 @@ export enum Correct {
 }
 
 export interface Answer {
-	id?: number;
+	id: number;
 	content: string;
 	isCorrect: Correct;
 	optionLetter?: string;
